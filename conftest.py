@@ -8,7 +8,6 @@ from pages.cart_page import CartPage
 from pages.desk_page import DeskPage
 from pages.locators.main_page_locators import CUSTOMIZABLE_DESK, CART_BTN_FOR_CUSTOMIZABLE_DESK, TOAST_HEADER, \
     OFFICE_DESIGN_SOFTWARE
-from pages.locators.product_page_locators import OFFICE_DESIGN_SOFTWARE_TEXT
 from pages.locators.shipping_page_locators import ShippingPage
 from pages.locators.shop_cart_locators import EMPRY_CART
 from pages.product_page import ProductPage
@@ -60,6 +59,7 @@ def del_all_product_at_cart(driver, base_page, cart_page):
 def add_and_delete_product(driver, add_product_to_cart, cart_page):
     yield
     cart_page.delete_all_products()
+    cart_page.find_visible(EMPRY_CART)
 
 
 @pytest.fixture

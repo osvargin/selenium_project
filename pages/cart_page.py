@@ -3,19 +3,19 @@ from selenium.common import TimeoutException
 
 from pages.base_page import BasePage
 from pages.locators.main_page_locators import CONTINUE_SHOPPING_BTN
-from pages.locators.shop_cart_locators import CHECKOUT_BTN, REMOVE_BTN
+from pages.locators.shop_cart_locators import CHECKOUT_BTN, REMOVE_BTN, PRODUCT_PRICE, TOTAL_UNTAXED, TOTAL_TAXES, \
+    ORDER_TOTAL
 
 
 class CartPage(BasePage):
     page_url = '/shop/cart'
 
     @allure.step('Сравнение цен продукта')
-    def assert_price_comparison(self, product_price_locator, total_untaxed_locator, total_tax_locator,
-                                order_total_locator):
-        product_price = self.find(product_price_locator)
-        total_untaxed = self.find(total_untaxed_locator)
-        total_taxed = self.find(total_tax_locator)
-        order_total = self.find(order_total_locator)
+    def assert_price_comparison(self):
+        product_price = self.find(PRODUCT_PRICE)
+        total_untaxed = self.find(TOTAL_UNTAXED)
+        total_taxed = self.find(TOTAL_TAXES)
+        order_total = self.find(ORDER_TOTAL)
         assert float(product_price.text) == float(total_untaxed.text), 'Цена продукта не равна цене без налога'
         assert float(order_total.text) == float(
             total_untaxed.text) + float(total_taxed.text), ('Конечная цена продукта отличается от суммы цены продукта'
