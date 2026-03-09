@@ -3,25 +3,27 @@ import re
 import allure
 
 from pages.base_page import BasePage
+from pages.locators.desk_page_locators import PRODUCT_CONTAINER, PRODUCT_CARD, SORT_BY_BTN, SORT_BY_NAME
+from pages.locators.main_page_locators import CATEGORIES_BTN, DESKS_BTN
 
 
 class DeskPage(BasePage):
     page_url = '/shop/category/desks-1'
 
     @allure.step('Переходим на страницу /shop/category/desks-1')
-    def go_to_desk_page(self, category_locator, desk_locator):
-        with allure.step(f'Наводимся на элемент {category_locator}'):
-            self.actions.move_to_element(self.find(category_locator)).perform()
-            self.find_and_click(desk_locator)
+    def go_to_desk_page(self):
+        with allure.step(f'Наводимся на элемент {CATEGORIES_BTN}'):
+            self.actions.move_to_element(self.find(CATEGORIES_BTN)).perform()
+            self.find_and_click(DESKS_BTN)
 
-    @allure.step('Выбираем сортировку в списке')
-    def sorted(self, locator, sort_option_text):
-        self.find_and_click(locator)
-        self.find_and_click(sort_option_text)
+    @allure.step('Выбираем сортировку Name A-Z в списке')
+    def sorted_asc(self):
+        self.find_and_click(SORT_BY_BTN)
+        self.find_and_click(SORT_BY_NAME)
 
     @allure.step('Собираем список товаров со страницы')
-    def products_name_from_page(self, container_locator, product_locator):
-        product_elements = self.wait_for_products_loaded(container_locator, product_locator)
+    def products_name_from_page(self):
+        product_elements = self.wait_for_products_loaded()
         product_names = [
             re.sub(r'\s*\$\s*[\d,]+\.?\d*\s*$', '',
                    re.sub(r'\s+', ' ', element.text.strip()).lower())
@@ -29,3 +31,9 @@ class DeskPage(BasePage):
             if element.text and element.text.strip()
         ]
         return product_names
+
+    @allure.step('Получаем список товаров')
+    def wait_for_products_loaded(self):
+        self.find_visible(PRODUCT_CONTAINER)
+        products = self.find_all(PRODUCT_CARD)
+        return products
